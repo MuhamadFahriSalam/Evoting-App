@@ -2,23 +2,35 @@
 
 namespace App\Services;
 
-use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 class QrCodeService
 {
-    public function generate(string $token, string $filename)
-    {
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->data($token)
-            ->size(300)
-            ->margin(10)
-            ->build();
+    public function generate(
+        string $data,
+        string $filename
+    ): string {
 
-        $path = storage_path(
-            'app/public/qrcodes/'.$filename.'.png'
+        $qrCode = new QrCode(
+            data: $data,
+            size: 300,
+            margin: 10
         );
+
+        $writer = new PngWriter();
+
+        $result = $writer->write($qrCode);
+
+        $directory = storage_path(
+            'app/public/qrcodes'
+        );
+
+        if (!is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        $path = $directory.'/'.$filename.'.png';
 
         $result->saveToFile($path);
 
