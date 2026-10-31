@@ -11,18 +11,21 @@ use Illuminate\Support\Str;
 class VoteService
 {
     public function castVote(
-        string $token,
+        string $plainToken,
         int $candidateId
     ): Ballot {
 
         return DB::transaction(function () use (
-            $token,
+            $plainToken,
             $candidateId
         ) {
 
             $credential = VoterCredential::query()
+                ->where(
+                    'token_hash',
+                    hash('sha256', $plainToken)
+                )
                 ->lockForUpdate()
-                ->where('token_hash', hash('sha256', $token))
                 ->firstOrFail();
 
             if ($credential->used_at) {
@@ -31,13 +34,20 @@ class VoteService
                 );
             }
 
+            if ($credential->status !== 'active') {
+                throw new \Exception(
+                    'Hak pilih tidak aktif.'
+                );
+            }
+
             $candidate = Candidate::query()
-                ->where('id', $candidateId)
                 ->where(
                     'election_id',
                     $credential->election_id
                 )
-                ->firstOrFail();
+                ->findOrFail(
+                    $candidateId
+                );
 
             $ballot = Ballot::create([
                 'election_id' => $credential->election_id,
@@ -46,8 +56,8 @@ class VoteService
             ]);
 
             $credential->update([
-                'used_at' => now(),
                 'status' => 'used',
+                'used_at' => now(),
             ]);
 
             return $ballot;
