@@ -12,8 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ballots', function (Blueprint $table) {
+
             $table->id();
-            $table->timestamps();
+
+            $table->foreignId('election_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('candidate_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->uuid('ballot_reference')
+                ->unique();
+
+            $table->timestamp('created_at')
+                ->useCurrent();
         });
     }
 

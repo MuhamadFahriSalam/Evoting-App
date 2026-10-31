@@ -13,6 +13,28 @@ return new class extends Migration
     {
         Schema::create('elections', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('village_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->string('title');
+
+            $table->timestamp('start_at');
+            $table->timestamp('end_at');
+
+            $table->enum('status', [
+                'draft',
+                'preparation',
+                'scheduled',
+                'active',
+                'paused',
+                'completed',
+                'cancelled'
+            ])->default('draft');
+
+            $table->boolean('results_visibility')->default(false);
+
             $table->timestamps();
         });
     }
