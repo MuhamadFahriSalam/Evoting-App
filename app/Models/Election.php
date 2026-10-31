@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Election extends Model
 {
+        protected $fillable = [
+        'village_id',
+        'title',
+        'start_at',
+        'end_at',
+        'status',
+        'results_visibility',
+    ];
+    
     public function village()
     {
         return $this->belongsTo(Village::class);

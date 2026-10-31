@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ballot extends Model
 {
-    //
+    protected $fillable = [
+    'election_id',
+    'candidate_id',
+    'ballot_reference',
+    ];
 }

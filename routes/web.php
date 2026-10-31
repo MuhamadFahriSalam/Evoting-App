@@ -2,13 +2,21 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Candidate\Index as CandidateIndex;
+use App\Livewire\Candidate\Form as CandidateForm; // <--- 1. Import class Form Livewire Anda di sini
 
 // Halaman Utama
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard Umum (Bisa diarahkan otomatis berdasarkan role)
+// Route Group untuk Kandidat (Gabung jadi satu agar tidak duplikat)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/candidates', CandidateIndex::class)->name('candidates.index');
+    Route::get('/candidates/create', CandidateForm::class)->name('candidates.create');
+});
+
+// Dashboard Umum (Arahkan otomatis berdasarkan role)
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
@@ -44,7 +52,7 @@ Route::middleware(['auth', 'role:officer'])->group(function () {
     })->name('officer.dashboard');
 });
 
-// Route Profil Bawaan Laravel Breeze/Jetstream
+// Route Profil Bawaan Laravel
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
