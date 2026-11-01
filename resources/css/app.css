@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] { display: none !important; }
+
 .scanner-reader { border: 0 !important; }
 .scanner-reader video { width: 100% !important; border-radius: 1rem; }
 
@@ -20,3 +22,4 @@
 
 .scanner-reader a { color: #6ee7b7; font-size: 0.8rem; }
 .scanner-reader span, .scanner-reader div { color: #e2e8f0; }
+
