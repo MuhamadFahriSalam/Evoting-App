@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[x-cloak] { display: none !important; }
+
+.scanner-reader { border: 0 !important; }
+.scanner-reader video { width: 100% !important; border-radius: 1rem; }
+
+.scanner-reader button {
+    background: #059669; color: #fff; font-weight: 600; font-size: 0.875rem;
+    padding: 0.625rem 1.25rem; border: 0; border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgb(5 150 105 / 0.25); cursor: pointer; margin: 0.25rem;
+    transition: background-color .2s;
+}
+.scanner-reader button:hover { background: #047857; }
+
+.scanner-reader select {
+    background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem; font-size: 0.875rem; margin: 0.25rem; max-width: 100%;
+}
+
+.scanner-reader a { color: #6ee7b7; font-size: 0.8rem; }
+.scanner-reader span, .scanner-reader div { color: #e2e8f0; }
+

@@ -19,9 +19,7 @@ use App\Livewire\Voter\Form as VoterForm;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'landing')->name('home');
 
 // Alur voting pemilih (token divalidasi di komponen/service)
 Route::get('/scan', Scanner::class)->name('vote.scan');
@@ -54,7 +52,11 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | Super Admin + Panitia (Committee)
@@ -69,9 +71,10 @@ Route::middleware(['auth', 'role:super_admin,committee'])->group(function () {
     // Hasil voting
     Route::get('/results', DashboardIndex::class)->name('results');
 
-    // QR hak pilih
+    // Pemilih
+    Route::get('/voters', VoterIndex::class)->name('voters.index');
+    Route::get('/voters/create', VoterForm::class)->name('voters.create');
     Route::get('/voters/qr', QrList::class)->name('voters.qr');
-   
 });
 
     // Pemilih

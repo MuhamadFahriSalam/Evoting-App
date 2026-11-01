@@ -1,9 +1,68 @@
-<div class="max-w-2xl mx-auto p-6">
+<div class="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white py-10 px-4">
+    <div class="max-w-lg mx-auto">
 
-    <h1 class="text-3xl font-bold mb-6">
-        Scan QR Pemilih
-    </h1>
+        {{-- Header --}}
+        <div class="text-center mb-8">
+            <span class="mx-auto flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/30">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                </svg>
+            </span>
+            <h1 class="mt-5 text-3xl font-extrabold text-slate-900 tracking-tight">Scan QR Pemilih</h1>
+            <p class="mt-2 text-sm text-slate-500">Arahkan kamera ke QR Code hak pilih untuk membuka surat suara.</p>
+        </div>
 
-    <div id="reader"></div>
+        {{-- Area kamera --}}
+        <div class="bg-white rounded-3xl ring-1 ring-slate-100 shadow-xl shadow-slate-200/60 p-4 sm:p-6">
+            <div wire:ignore class="relative overflow-hidden rounded-2xl bg-slate-900 ring-1 ring-slate-200">
+                <div id="reader" class="scanner-reader w-full"></div>
+            </div>
 
+            <ul class="mt-5 space-y-2.5 text-sm text-slate-500">
+                <li class="flex items-start gap-2.5">
+                    <span class="mt-0.5 flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 shrink-0">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                    Izinkan akses kamera saat diminta browser.
+                </li>
+                <li class="flex items-start gap-2.5">
+                    <span class="mt-0.5 flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 shrink-0">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                    Posisikan QR di tengah bingkai dengan pencahayaan cukup.
+                </li>
+                <li class="flex items-start gap-2.5">
+                    <span class="mt-0.5 flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 shrink-0">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                    Setiap QR hanya dapat dipakai satu kali.
+                </li>
+            </ul>
+        </div>
+
+        {{-- Cadangan: input manual --}}
+        <div class="mt-6 bg-white rounded-3xl ring-1 ring-slate-100 shadow-lg shadow-slate-200/50 p-5"
+             x-data="{
+                 value: '',
+                 go() {
+                     const token = this.value.trim().split('/').filter(Boolean).pop();
+                     if (token) window.location.href = '{{ url('/vote') }}/' + encodeURIComponent(token);
+                 }
+             }">
+            <p class="text-sm font-semibold text-slate-700">Kamera tidak bisa dipakai?</p>
+            <p class="text-xs text-slate-400 mt-0.5">Tempel link atau kode dari QR di sini.</p>
+            <form x-on:submit.prevent="go" class="mt-3 flex gap-2">
+                <input type="text" x-model="value" placeholder="Tempel link atau kode"
+                       class="flex-1 min-w-0 rounded-xl border-0 bg-slate-50 py-2.5 px-3.5 text-sm text-slate-900 ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-inset focus:ring-emerald-500 transition">
+                <button type="submit"
+                        class="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md shadow-emerald-600/25 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition">
+                    Buka
+                </button>
+            </form>
+        </div>
+
+        <p class="mt-6 text-center text-sm">
+            <a href="{{ route('home') }}" class="text-slate-400 hover:text-slate-600">&larr; Kembali ke beranda</a>
+        </p>
+    </div>
 </div>
