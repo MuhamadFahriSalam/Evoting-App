@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('villages', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    Schema::create('villages', function (Blueprint $table) {
+        $table->id();
+
+        $table->string('name');
+        $table->string('district');
+        $table->string('regency');
+        $table->string('province');
+
+        $table->timestamps();
+    });
     }
 
     /**
