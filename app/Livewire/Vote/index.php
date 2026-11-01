@@ -9,6 +9,9 @@ use App\Services\VoteService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.voter')]
 
 class Index extends Component
 {
