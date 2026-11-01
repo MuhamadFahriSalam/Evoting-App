@@ -6,25 +6,35 @@
 
     <div class="grid md:grid-cols-3 gap-4 mb-8">
 
-        <div class="p-6 bg-blue-100 rounded">
-            <h2>Total Pemilih</h2>
+        <div class="bg-blue-100 p-4 rounded-xl">
+
+            <div class="text-sm">
+                Total Pemilih
+            </div>
 
             <div class="text-3xl font-bold">
                 {{ $totalVoters }}
             </div>
+
         </div>
 
-        <div class="p-6 bg-green-100 rounded">
-            <h2>Suara Masuk</h2>
+        <div class="bg-green-100 p-4 rounded-xl">
+
+            <div class="text-sm">
+                Suara Masuk
+            </div>
 
             <div class="text-3xl font-bold">
                 {{ $totalVotes }}
             </div>
+
         </div>
 
-        <div class="p-6 bg-yellow-100 rounded">
+        <div class="bg-yellow-100 p-4 rounded-xl">
 
-            <h2>Partisipasi</h2>
+            <div class="text-sm">
+                Partisipasi
+            </div>
 
             <div class="text-3xl font-bold">
 
@@ -33,36 +43,60 @@
                     : 0 }}%
 
             </div>
+
         </div>
 
     </div>
 
     <div class="space-y-4">
 
-        @foreach($results as $result)
+        @foreach($candidates as $item)
 
-            <div
-                class="p-4 border rounded">
+            <div class="bg-white p-6 rounded-2xl shadow">
 
-                <div class="flex justify-between">
+                <div class="flex items-center gap-4">
 
-                    <span>
+                    @if($item['candidate']->photo)
 
-                        {{ $result['candidate']->serial_number }}
+                        <img
+                            src="{{ asset('storage/'.$item['candidate']->photo) }}"
+                            class="w-20 h-20 rounded-full object-cover">
 
-                        -
+                    @endif
 
-                        {{ $result['candidate']->name }}
+                    <div class="flex-1">
 
-                    </span>
+                        <h2 class="font-bold text-xl">
 
-                    <span class="font-bold">
+                            {{ $item['candidate']->name }}
 
-                        {{ $result['votes'] }}
+                        </h2>
 
-                        Suara
+                        <p class="text-slate-500">
 
-                    </span>
+                            No Urut
+                            {{ $item['candidate']->serial_number }}
+
+                        </p>
+
+                    </div>
+
+                    <div class="text-right">
+
+                        <div
+                            class="text-3xl font-bold text-emerald-600">
+
+                            {{ $item['votes'] }}
+
+                        </div>
+
+                        <div>
+
+                            {{ $item['percentage'] }}%
+
+                        </div>
+
+                    </div>
 
                 </div>
 

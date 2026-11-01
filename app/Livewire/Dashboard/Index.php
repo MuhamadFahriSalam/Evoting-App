@@ -11,26 +11,33 @@ class Index extends Component
 {
     public function render()
     {
-        $candidates = Candidate::all();
+        $totalVotes = Ballot::count();
 
-        $results = [];
+        $candidates = Candidate::all()
+            ->map(function ($candidate) use ($totalVotes) {
 
-        foreach ($candidates as $candidate) {
-
-            $results[] = [
-                'candidate' => $candidate,
-                'votes' => Ballot::where(
+                $votes = Ballot::where(
                     'candidate_id',
                     $candidate->id
-                )->count(),
-            ];
-        }
+                )->count();
+
+                return [
+                    'candidate' => $candidate,
+                    'votes' => $votes,
+                    'percentage' => $totalVotes > 0
+                        ? round(
+                            ($votes / $totalVotes) * 100,
+                            1
+                        )
+                        : 0,
+                ];
+            });
 
         return view(
             'livewire.dashboard.index',
             [
-                'results' => $results,
-                'totalVotes' => Ballot::count(),
+                'candidates' => $candidates,
+                'totalVotes' => $totalVotes,
                 'totalVoters' => Voter::count(),
             ]
         );

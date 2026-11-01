@@ -2,53 +2,57 @@
 
 namespace App\Livewire\Vote;
 
-use Livewire\Component;
+use App\Exceptions\VoteException;
 use App\Models\Candidate;
 use App\Models\VoterCredential;
 use App\Services\VoteService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
 
 class Index extends Component
 {
+    #[Locked]
     public string $token;
 
-    public $candidates = [];
+    #[Locked]
+    public int $electionId;
 
     public function mount($token)
     {
+        $credential = VoterCredential::where('token_hash', hash('sha256', $token))
+            ->first();
+
+        if (! $credential || $credential->used_at || $credential->status !== 'active') {
+            abort(403, 'Hak pilih tidak valid atau sudah digunakan.');
+        }
+
         $this->token = $token;
-
-        $credential = VoterCredential::where(
-            'token_hash',
-            hash('sha256', $token)
-        )->firstOrFail();
-
-        $this->candidates = Candidate::where(
-            'election_id',
-            $credential->election_id
-        )
-        ->where(
-            'verification_status',
-            'verified'
-        )
-        ->get();
+        $this->electionId = $credential->election_id;
     }
 
-    public function vote(
-        VoteService $voteService,
-        $candidateId
-    )
+    public function vote(int $candidateId, VoteService $voteService)
     {
-        $voteService->castVote(
-            $this->token,
-            $candidateId
-        );
+        try {
+            $voteService->castVote($this->token, $candidateId);
+        } catch (VoteException $e) {
+            $this->addError('vote', $e->getMessage());
+            return;
+        } catch (ModelNotFoundException $e) {
+            $this->addError('vote', 'Token atau kandidat tidak valid.');
+            return;
+        }
 
-        return redirect()
-            ->route('vote.success');
+        return redirect()->route('vote.success');
     }
 
     public function render()
     {
-        return view('livewire.vote.index');
+        return view('livewire.vote.index', [
+            'candidates' => Candidate::where('election_id', $this->electionId)
+                ->where('verification_status', 'verified')
+                ->orderBy('serial_number')
+                ->get(),
+        ]);
     }
 }
