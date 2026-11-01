@@ -40,22 +40,33 @@
 
     <div class="mt-8 flex gap-3 flex-wrap">
 
-        <a href="{{ route('candidates.index') }}"
-           class="bg-blue-600 text-white px-4 py-2 rounded">
+        <a
+            href="{{ route('candidates.index') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
 
             Kelola Kandidat
 
         </a>
 
-        <a href="{{ route('voters.qr') }}"
-           class="bg-green-600 text-white px-4 py-2 rounded">
+        <a
+            href="{{ route('voters.index') }}"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+
+            Data Pemilih
+
+        </a>
+
+        <a
+            href="{{ route('voters.qr') }}"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
 
             QR Pemilih
 
         </a>
 
-        <a href="{{ route('results') }}"
-           class="bg-yellow-600 text-white px-4 py-2 rounded">
+        <a
+            href="{{ route('results') }}"
+            class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg">
 
             Hasil Voting
 

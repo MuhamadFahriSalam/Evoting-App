@@ -21,6 +21,8 @@ class Voter extends Model
 
     public function credential()
     {
-        return $this->hasOne(VoterCredential::class);
+        return $this->hasOne(
+            \App\Models\VoterCredential::class
+        );
     }
 }

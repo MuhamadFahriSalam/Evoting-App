@@ -10,6 +10,8 @@ use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Voter\QrList;
 use App\Livewire\Vote\Scanner;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Voter\Index as VoterIndex;
+use App\Livewire\Voter\Form as VoterForm;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,8 +54,7 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin', AdminDashboard::class)
-    ->name('admin.dashboard');
+Route::get('/admin', AdminDashboard::class)->name('admin.dashboard');
 /*
 |--------------------------------------------------------------------------
 | Super Admin + Panitia (Committee)
@@ -70,7 +71,13 @@ Route::middleware(['auth', 'role:super_admin,committee'])->group(function () {
 
     // QR hak pilih
     Route::get('/voters/qr', QrList::class)->name('voters.qr');
+   
 });
+
+    // Pemilih
+    Route::get('/voters', VoterIndex::class)->name('voters.index');
+
+    Route::get('/voters/create', VoterForm::class)->name('voters.create');
 
 /*
 |--------------------------------------------------------------------------
