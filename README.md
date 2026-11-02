@@ -124,42 +124,6 @@ php artisan serve
 6. Pilih satu kandidat dan konfirmasi pilihan.
 7. Lihat hasil pemilihan pada halaman **Hasil**.
 
-## 🌐 Akses Publik dengan ngrok (opsional)
-
-Kamera browser hanya dapat dipakai lewat HTTPS atau `localhost`. Untuk mencoba pemindaian dari HP, buka aplikasi lewat tunnel HTTPS seperti ngrok.
-
-1. Bangun aset produksi, jangan pakai `npm run dev`
-
-```
-npm run build
-php artisan serve --host=127.0.0.1 --port=8000
-```
-
-2. Di terminal lain jalankan
-
-```
-ngrok http 8000
-```
-
-3. Ubah `.env` sesuai alamat ngrok, lalu bersihkan cache konfigurasi
-
-```
-APP_URL=https://xxxx.ngrok-free.app
-APP_DEBUG=false
-```
-
-```
-php artisan config:clear
-```
-
-Aplikasi hanya dapat diakses selama komputer, `php artisan serve`, dan ngrok sama-sama berjalan. Gunakan data fiktif saja selama aplikasi terbuka ke publik.
-
-## 🛡️ Catatan Keamanan
-
--   Ganti semua akun dan kata sandi bawaan seeder sebelum aplikasi dibuka ke publik.
--   Jangan memasukkan NIK atau nama warga asli pada simulasi.
--   Jangan menyimpan token QR Code dalam bentuk teks biasa pada penggunaan sungguhan. Simpan hash-nya saja.
--   Atur `APP_DEBUG=false` pada lingkungan yang dapat diakses publik.
 
 ## 👨‍💻 Kontributor
 
