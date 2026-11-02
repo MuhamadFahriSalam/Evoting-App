@@ -8,24 +8,6 @@ Pilkades Digital adalah aplikasi simulasi pemilihan kepala desa berbasis web. Pa
 
 Aplikasi ini dibuat sebagai simulasi. Sebelum dipakai pada pemilihan sungguhan, rancangan keamanan, kerahasiaan suara, dan kepatuhan terhadap peraturan yang berlaku harus ditinjau dan diaudit oleh pihak yang berwenang.
 
-## ✨ Fitur
-
--   **Dashboard panitia**: ringkasan pemilih, kandidat, dan partisipasi.
--   **Manajemen kandidat**: nomor urut, foto, profil, visi, dan misi.
--   **Manajemen pemilih**: tambah pemilih secara manual, data ganda ditolak.
--   **Pemilihan otomatis**: mengetik nama pemilihan baru pada form kandidat atau pemilih akan membuatnya otomatis, lalu muncul sebagai saran berikutnya.
--   **QR Code hak pilih**: satu QR Code unik untuk setiap pemilih, hanya berlaku satu kali.
--   **Pemindaian QR Code**: memakai kamera perangkat, dengan tombol putar kamera depan/belakang dan input kode manual sebagai cadangan.
--   **Halaman pemilihan**: pemilih hanya dapat memilih satu kandidat.
--   **Hasil pemilihan**: rekapitulasi suara per kandidat.
-
-## 🔒 Aturan Pemilihan
-
--   Satu pemilih hanya dapat memberikan satu suara untuk satu kandidat.
--   Permintaan yang memuat lebih dari satu kandidat ditolak seluruhnya oleh server.
--   QR Code yang sudah dipakai tidak dapat dipakai lagi.
--   Validasi dilakukan di backend, bukan hanya di tampilan.
-
 ## ⚡ Teknologi
 
 -   [PHP 8.2+](https://php.net/) : Bahasa Pemrograman
@@ -64,18 +46,7 @@ npm install
 cp .env.example .env
 ```
 
-5. Buat database MySQL kosong, lalu sesuaikan konfigurasi aplikasi dan database pada file .env
-
-```
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=evoting
-DB_USERNAME=root
-DB_PASSWORD=
-```
+5. Sesuaikan konfigurasi aplikasi, database, payment gateway, dll. pada file .env sesuai dengan environment yang akan digunakan
 
 6. Jalankan perintah
 
