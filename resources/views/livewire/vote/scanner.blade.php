@@ -13,9 +13,39 @@
         </div>
 
         {{-- Area kamera --}}
-        <div class="bg-white rounded-3xl ring-1 ring-slate-100 shadow-xl shadow-slate-200/60 p-4 sm:p-6">
-            <div wire:ignore class="relative overflow-hidden rounded-2xl bg-slate-900 ring-1 ring-slate-200">
+        <div class="bg-white rounded-3xl ring-1 ring-slate-100 shadow-xl shadow-slate-200/60 p-4 sm:p-6"
+            wire:ignore
+            x-data="cameraScanner({ baseUrl: @js(url('/vote')) })">
+
+            <div class="relative min-h-64 overflow-hidden rounded-2xl bg-slate-900 ring-1 ring-slate-200"
+                :class="mirror ? '[&_video]:-scale-x-100' : ''">
+
                 <div id="reader" class="scanner-reader w-full"></div>
+
+                {{-- Label kamera aktif --}}
+                <span x-show="running && label" x-cloak x-text="label" role="status"
+                    class="absolute left-3 top-3 z-10 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur"></span>
+
+                {{-- Tombol putar kamera --}}
+                <button type="button" x-show="running && cameras.length > 1" x-cloak @click="flip()" :disabled="busy"
+                        aria-label="Putar kamera depan atau belakang"
+                        class="absolute bottom-3 right-3 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-lg ring-1 ring-slate-200 transition hover:bg-white focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/40 disabled:opacity-50">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M5.6 15a8 8 0 0013.9 2M18.4 9A8 8 0 004.5 7"/>
+                    </svg>
+                    Putar kamera
+                </button>
+
+                {{-- Sedang membuka kamera --}}
+                <div x-show="busy" x-cloak role="status"
+                    class="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/80 text-sm font-medium text-white">
+                    Membuka kamera…
+                </div>
+
+                {{-- Pemberitahuan setelah kembali ke kamera semula --}}
+                <p x-show="notice" x-cloak x-text="notice" role="status"
+                    class="absolute inset-x-3 bottom-16 z-10 rounded-lg bg-amber-100 px-3 py-2 text-center text-xs font-medium text-amber-900">
+                </p>
             </div>
 
             <ul class="mt-5 space-y-2.5 text-sm text-slate-500">

@@ -4,6 +4,10 @@
 
 [x-cloak] { display: none !important; }
 
+#reader img[alt="Info icon"] { display: none; }
+
+#qr-shaded-region { border-color: rgba(0, 0, 0, 0.25) !important; }
+
 .scanner-reader { border: 0 !important; }
 .scanner-reader video { width: 100% !important; border-radius: 1rem; }
 
