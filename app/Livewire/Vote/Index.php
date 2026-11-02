@@ -25,6 +25,9 @@ class Index extends Component
 
     public string $message = '';
 
+    // ID kandidat yang sedang menunggu konfirmasi (modal terbuka jika tidak null)
+    public ?int $confirmingId = null;
+
     public function mount($token)
     {
         $credential = VoterCredential::where(
@@ -60,6 +63,18 @@ class Index extends Component
         $this->electionId = $credential->election_id;
     }
 
+    // Buka modal konfirmasi
+    public function confirm(int $candidateId): void
+    {
+        $this->confirmingId = $candidateId;
+    }
+
+    // Tutup modal konfirmasi
+    public function cancel(): void
+    {
+        $this->confirmingId = null;
+    }
+
     public function vote(
         int $candidateId,
         VoteService $voteService
@@ -73,6 +88,8 @@ class Index extends Component
 
         } catch (VoteException $e) {
 
+            $this->confirmingId = null;
+
             $this->addError(
                 'vote',
                 $e->getMessage()
@@ -81,6 +98,8 @@ class Index extends Component
             return;
 
         } catch (ModelNotFoundException $e) {
+
+            $this->confirmingId = null;
 
             $this->addError(
                 'vote',
@@ -110,19 +129,22 @@ class Index extends Component
 
     public function render()
     {
+        $candidates = Candidate::where(
+                'election_id',
+                $this->electionId
+            )
+            ->where(
+                'verification_status',
+                'verified'
+            )
+            ->orderBy('serial_number')
+            ->get();
+
         return view(
             'livewire.vote.index',
             [
-                'candidates' => Candidate::where(
-                        'election_id',
-                        $this->electionId
-                    )
-                    ->where(
-                        'verification_status',
-                        'verified'
-                    )
-                    ->orderBy('serial_number')
-                    ->get(),
+                'candidates' => $candidates,
+                'confirming' => $candidates->firstWhere('id', $this->confirmingId),
             ]
         );
     }
