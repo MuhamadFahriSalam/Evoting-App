@@ -24,7 +24,7 @@ Aplikasi ini dibuat sebagai simulasi. Sebelum dipakai pada pemilihan sungguhan, 
 1. Clone repository ini dengan perintah
 
 ```git
-git clone https://github.com/<username>/pilkades-app.git
+git clone https://github.com/MuhamadFahriSalam/Evoting-App.git
 ```
 
 2. Masuk ke direktori aplikasi dengan perintah
