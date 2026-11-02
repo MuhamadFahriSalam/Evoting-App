@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use App\Services\VoteReceipt;
 
 #[Layout('layouts.voter')]
 
@@ -46,9 +47,14 @@ class Index extends Component
             return;
         }
 
+        $credential = VoterCredential::where('token_hash', hash('sha256', $this->token))->first();
+
+        if ($credential) {
+            session(['vote_receipt' => VoteReceipt::make($credential)]);
+        }
+
         return redirect()->route('vote.success');
     }
-
     public function render()
     {
         return view('livewire.vote.index', [

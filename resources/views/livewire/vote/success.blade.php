@@ -37,6 +37,37 @@
                     </li>
                 </ul>
 
+                {{-- Bukti QR --}}
+                @if ($receiptUrl)
+                    <div class="mt-6 rounded-2xl bg-slate-50 ring-1 ring-slate-100 p-5" wire:ignore
+                        x-data="{ src: '' }"
+                        x-init="
+                            const t = setInterval(async () => {
+                                if (window.renderReceiptQr) {
+                                    clearInterval(t);
+                                    const probe = new Image();
+                                    await window.renderReceiptQr(probe, @js($receiptUrl));
+                                    src = probe.src;
+                                }
+                            }, 100);
+                        ">
+                        <p class="text-sm font-semibold text-slate-800">Bukti Sudah Memilih</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Tunjukkan QR ini kepada petugas, atau unduh sebagai arsip.</p>
+
+                        <div class="mt-4 mx-auto w-fit rounded-2xl bg-white p-2 ring-1 ring-slate-200 shadow-sm">
+                            <img x-show="src" x-bind:src="src" alt="QR bukti sudah memilih" class="block w-64 h-64">
+                            <div x-show="!src" class="w-64 h-64 flex items-center justify-center text-xs text-slate-400">Membuat QR…</div>
+                        </div>
+
+                        <a x-show="src" x-bind:href="src" download="bukti-memilih-{{ $receiptCode }}.png"
+                        class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-colors focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/></svg>
+                            Unduh Bukti QR
+                        </a>
+                        <p class="mt-2 text-center text-[11px] text-slate-400">Di HP: tahan lama gambar QR lalu pilih Simpan gambar.</p>
+                    </div>
+                @endif
+
                 {{-- Tombol --}}
                 <div class="mt-8 space-y-3">
                     <a href="{{ route('vote.scan') }}"
