@@ -4,4 +4,5 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-import './qr-scanner';
+// import './qr-scanner';
+import './camera-scanner';
