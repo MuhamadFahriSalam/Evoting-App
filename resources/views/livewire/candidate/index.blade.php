@@ -30,19 +30,16 @@
             <div class="p-6 lg:p-8">
 
                 <!-- Flash message (bisa ditutup) -->
-                @if (session()->has('message'))
-                    <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.300ms
-                         x-init="setTimeout(() => show = false, 5000)"
-                         class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-sm font-medium flex items-center justify-between shadow-sm">
-                        <div class="flex items-center">
-                            <span class="flex items-center justify-center w-8 h-8 mr-3 rounded-full bg-emerald-100 text-emerald-600">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </span>
-                            {{ session('message') }}
-                        </div>
-                        <button @click="show = false" class="text-emerald-500 hover:text-emerald-700 transition-colors" aria-label="Tutup">
+                @php($flash = $notice ?? session('message') ?? session('success'))
+
+                @if ($flash)
+                    <div wire:key="flash-{{ $noticeId }}" x-data="{ show: true }" x-show="show" x-transition.opacity.duration.300ms
+                        x-init="setTimeout(() => show = false, 5000)"
+                        role="{{ $noticeType === 'error' ? 'alert' : 'status' }}"
+                        class="mb-6 p-4 border rounded-2xl text-sm font-medium flex items-center justify-between shadow-sm
+                                {{ $noticeType === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800' }}">
+                        <span>{{ $noticeType === 'error' ? 'Gagal:' : 'Berhasil:' }} {{ $flash }}</span>
+                        <button @click="show = false" class="opacity-60 hover:opacity-100 transition" aria-label="Tutup">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
@@ -63,7 +60,9 @@
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-slate-700 text-sm bg-white">
                             @forelse($candidates as $candidate)
-                                <tr class="group hover:bg-emerald-50/40 transition-colors duration-150">
+                                <tr wire:key="candidate-{{ $candidate->id }}"
+                                    wire:loading.class="opacity-50" wire:target="delete({{ $candidate->id }})"
+                                    class="group hover:bg-emerald-50/40 transition-colors duration-150">
 
                                     <!-- No. Urut -->
                                     <td class="py-4 px-6">
@@ -101,15 +100,16 @@
 
                                     <!-- Aksi -->
                                     <td class="py-4 px-6 text-center">
-                                        <button
+                                        <button type="button"
                                             wire:click="delete({{ $candidate->id }})"
                                             wire:confirm="Apakah Anda yakin ingin menghapus kandidat ini?"
-                                            wire:loading.attr="disabled"
+                                            wire:loading.attr="disabled" wire:target="delete({{ $candidate->id }})"
                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-rose-600 text-rose-600 hover:text-white font-medium text-xs rounded-lg border border-rose-200 hover:border-rose-600 shadow-sm focus:outline-none focus:ring-4 focus:ring-rose-500/20 disabled:opacity-50 transition-all duration-200">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.87 12.14A2 2 0 0116.14 21H7.86a2 2 0 01-1.99-1.86L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/>
                                             </svg>
-                                            Hapus
+                                            <span wire:loading.remove wire:target="delete({{ $candidate->id }})">Hapus</span>
+                                            <span wire:loading wire:target="delete({{ $candidate->id }})">Menghapus…</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -124,7 +124,7 @@
                                             <p class="text-sm text-slate-400 max-w-xs">Silakan tambahkan data calon kepala desa terlebih dahulu melalui tombol di atas.</p>
                                             <a href="{{ route('candidates.create') }}"
                                                class="mt-2 inline-flex items-center px-4 py-2 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
-                                                + Tambah Kandidat
+                                                + hapus
                                             </a>
                                         </div>
                                     </td>

@@ -12,6 +12,7 @@ use App\Livewire\Vote\Scanner;
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Voter\Index as VoterIndex;
 use App\Livewire\Voter\Form as VoterForm;
+use App\Livewire\Vote\Verify as VoteVerify;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::view('/', 'landing')->name('home');
 Route::get('/scan', Scanner::class)->name('vote.scan');
 Route::get('/vote/{token}', VoteIndex::class)->name('vote.index');
 Route::get('/vote-success', VoteSuccess::class)->name('vote.success');
+Route::get('/verify/{code}', VoteVerify::class)->name('vote.verify');
 
 /*
 |--------------------------------------------------------------------------
