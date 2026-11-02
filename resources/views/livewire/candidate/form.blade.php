@@ -13,22 +13,31 @@
         <fieldset class="space-y-5">
             <legend class="mb-1 text-lg font-semibold text-slate-900">Data utama</legend>
 
-            {{-- Pemilihan --}}
-            <div>
-                <label for="election_id" class="mb-1.5 block text-sm font-medium text-slate-800">
-                    Pemilihan <span class="text-red-600" aria-hidden="true">*</span>
-                </label>
-                <select id="election_id" wire:model="election_id"
-                        class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm transition focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-600/20 @error('election_id') border-red-500 @enderror">
-                    <option value="">Pilih pemilihan</option>
-                    @foreach ($elections as $election)
-                        <option value="{{ $election->id }}">{{ $election->title }}</option>
-                    @endforeach
-                </select>
-                @error('election_id')
-                    <p class="mt-1.5 text-sm font-medium text-red-700" role="alert">Gagal: {{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Pemilihan (ketik; jika belum ada akan dibuat otomatis) --}}
+        <div>
+            <label for="election_title" class="mb-1.5 block text-sm font-medium text-slate-800">
+                Pemilihan <span class="text-red-600" aria-hidden="true">*</span>
+            </label>
+            <input id="election_title" type="text" wire:model.live.debounce.400ms="election_title" list="election-list"
+                autocomplete="off" placeholder="Ketik atau pilih nama pemilihan"
+                class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-600/20 @error('election_title') border-red-500 @enderror">
+            <datalist id="election-list">
+                @foreach ($elections as $election)
+                    <option value="{{ $election->title }}"></option>
+                @endforeach
+            </datalist>
+
+            @error('election_title')
+                <p class="mt-1.5 text-sm font-medium text-red-700" role="alert">Gagal: {{ $message }}</p>
+            @elseif ($this->isNewElection)
+                <p class="mt-1.5 flex items-start gap-1.5 text-sm text-amber-700" role="status">
+                    <svg class="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8.26 3.1a2 2 0 013.48 0l6.2 11A2 2 0 0116.2 17H3.8a2 2 0 01-1.74-2.9l6.2-11zM10 7a1 1 0 00-1 1v3a1 1 0 102 0V8a1 1 0 00-1-1zm0 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+                    <span>Peringatan: pemilihan baru &ldquo;{{ \Illuminate\Support\Str::of($election_title)->squish() }}&rdquo; akan dibuat otomatis saat disimpan. Periksa ejaan agar tidak membuat duplikat.</span>
+                </p>
+            @else
+                <p class="mt-1.5 text-sm text-slate-500">Pilih dari saran, atau ketik nama baru untuk membuat pemilihan.</p>
+            @enderror
+        </div>
 
             <div class="grid gap-5 sm:grid-cols-3">
                 {{-- Nomor urut --}}
