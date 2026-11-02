@@ -28,9 +28,10 @@
 
     </div>
 
-    @else
+@else
 
-    <div class="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <div class="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white"
+         wire:keydown.escape.window="cancel">
 
         {{-- Header --}}
         <header class="border-b border-slate-100 bg-white/80 backdrop-blur">
@@ -60,8 +61,12 @@
             </div>
 
             @error('vote')
-                <div class="mt-8 max-w-xl mx-auto p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl text-sm font-medium shadow-sm">
-                    {{ $message }}
+                <div class="fixed top-4 inset-x-4 z-[60] max-w-xl mx-auto p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl text-sm font-medium shadow-xl"
+                     x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+                    <div class="flex items-start justify-between gap-3">
+                        <span>{{ $message }}</span>
+                        <button type="button" @click="show = false" class="text-rose-500 hover:text-rose-700 font-bold leading-none">&times;</button>
+                    </div>
                 </div>
             @enderror
 
@@ -110,10 +115,9 @@
 
                             <button
                                 type="button"
-                                wire:click="vote({{ $candidate->id }})"
-                                wire:confirm="Apakah Anda yakin memilih kandidat nomor {{ $candidate->serial_number }} ({{ $candidate->name }})? Pilihan tidak dapat diubah."
+                                wire:click="confirm({{ $candidate->id }})"
                                 wire:loading.attr="disabled"
-                                wire:target="vote"
+                                wire:target="confirm,vote"
                                 class="w-full mt-5 inline-flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-md shadow-emerald-600/25 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-emerald-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span wire:loading.remove wire:target="vote" class="inline-flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,5 +142,71 @@
                 Suara Anda tidak terhubung dengan identitas Anda.
             </p>
         </div>
+
+        {{-- Modal Konfirmasi (Livewire) --}}
+        @if($confirming)
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-slate-900/60 backdrop-blur-sm"
+                 wire:click.self="cancel">
+
+                <div class="w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl ring-1 ring-slate-200 p-6 sm:p-10">
+
+                    <div class="flex flex-col-reverse md:flex-row md:items-center gap-8">
+
+                        {{-- Teks --}}
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Konfirmasi Pilihan</h3>
+                            <p class="mt-2 text-sm sm:text-base text-slate-500">
+                                Apakah Anda yakin ingin memilih kandidat berikut?
+                            </p>
+
+                            <p class="mt-6 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-400">Nomor Urut</p>
+                            <p class="text-6xl sm:text-7xl font-extrabold leading-none text-emerald-600">{{ $confirming->serial_number }}</p>
+
+                            <h4 class="mt-3 text-2xl sm:text-3xl font-extrabold text-slate-900">{{ $confirming->name }}</h4>
+
+                            @if($confirming->vision)
+                                <div class="mt-5 max-h-32 overflow-y-auto rounded-2xl bg-slate-50 ring-1 ring-slate-100 p-4 text-left">
+                                    <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Visi</p>
+                                    <p class="mt-1 text-sm text-slate-600 leading-relaxed">{{ $confirming->vision }}</p>
+                                </div>
+                            @endif
+
+                            <p class="mt-5 text-sm font-semibold text-red-600">
+                                Perhatian! Pilihan yang sudah dikirim tidak dapat diubah.
+                            </p>
+                        </div>
+
+                        {{-- Foto --}}
+                        <div class="shrink-0 mx-auto md:mx-0 w-44 sm:w-56 aspect-[3/4] rounded-3xl overflow-hidden bg-red-600 ring-4 ring-emerald-100 shadow-xl">
+                            @if($confirming->photo)
+                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($confirming->photo) }}"
+                                     alt="Foto {{ $confirming->name }}"
+                                     class="w-full h-full object-cover object-top">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-6xl font-extrabold">
+                                    {{ strtoupper(mb_substr($confirming->name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Tombol lebar --}}
+                    <div class="mt-8 pt-6 border-t border-slate-100 grid grid-cols-2 gap-4">
+                        <button type="button" wire:click="cancel"
+                                wire:loading.attr="disabled" wire:target="vote"
+                                class="py-4 sm:py-5 text-base sm:text-lg rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold shadow-md shadow-red-600/25 transition disabled:opacity-50">
+                            Batal
+                        </button>
+                        <button type="button" wire:click="vote({{ $confirming->id }})"
+                                wire:loading.attr="disabled" wire:target="vote"
+                                class="py-4 sm:py-5 text-base sm:text-lg rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-600/25 transition disabled:opacity-50">
+                            <span wire:loading.remove wire:target="vote">Ya, Pilih</span>
+                            <span wire:loading wire:target="vote">Memproses...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 @endif
