@@ -30,7 +30,7 @@ git clone https://github.com/MuhamadFahriSalam/Evoting-App.git
 2. Masuk ke direktori aplikasi dengan perintah
 
 ```
-cd pilkades-app
+cd Evoting-app
 ```
 
 3. Install dependency
