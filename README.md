@@ -37,17 +37,7 @@ Aplikasi ini dibuat sebagai simulasi. Sebelum dipakai pada pemilihan sungguhan, 
 -   [html5-qrcode](https://github.com/mebjas/html5-qrcode) : Pemindai QR Code lewat kamera
 -   [MySQL](https://www.mysql.com/) : Database
 
-## 👥 Peran Pengguna
-
-| Peran   | Akses                                                               |
-| ------- | ------------------------------------------------------------------- |
-| Panitia | Mengelola kandidat, pemilih, QR Code hak pilih, dan melihat hasil   |
-| Petugas | Memindai QR Code pemilih                                            |
-| Pemilih | Membuka halaman pemilihan lewat QR Code dan memilih satu kandidat   |
-
 ## 🚩 Cara Menjalankan
-
-Prasyarat: PHP 8.2 atau lebih baru, Composer, Node.js 20 atau lebih baru, dan MySQL.
 
 1. Clone repository ini dengan perintah
 
