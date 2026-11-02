@@ -75,16 +75,6 @@ php artisan serve
 
 10. Aplikasi dapat diakses melalui http://localhost:8000
 
-## 🧪 Alur Simulasi
-
-1. Login sebagai panitia.
-2. Tambahkan kandidat. Ketik nama pemilihan pada form, dan pemilihan baru dibuat otomatis jika belum ada.
-3. Tambahkan pemilih. QR Code hak pilih dibuat setelah data disimpan.
-4. Cetak atau tampilkan QR Code pemilih.
-5. Buka halaman **Scan QR**, lalu arahkan kamera ke QR Code.
-6. Pilih satu kandidat dan konfirmasi pilihan.
-7. Lihat hasil pemilihan pada halaman **Hasil**.
-
 
 ## 👨‍💻 Kontributor
 
