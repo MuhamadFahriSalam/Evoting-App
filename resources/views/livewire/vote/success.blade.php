@@ -39,7 +39,10 @@
 
                 {{-- Bukti QR --}}
                 @if ($receiptUrl)
-                    <div class="mt-6 rounded-2xl bg-slate-50 ring-1 ring-slate-100 p-5" wire:ignore
+                    <div
+                        id="receipt-card"
+                        class="mt-6 rounded-2xl bg-slate-50 ring-1 ring-slate-100 p-5"
+                        wire:ignore
                         x-data="{ src: '' }"
                         x-init="
                             const t = setInterval(async () => {
@@ -52,18 +55,46 @@
                             }, 100);
                         ">
                         <p class="text-sm font-semibold text-slate-800">Bukti Sudah Memilih</p>
-                        <p class="text-xs text-slate-400 mt-0.5">Tunjukkan QR ini kepada petugas, atau unduh sebagai arsip.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Tunjukkan QR ini kepada petugas.</p>
 
                         <div class="mt-4 mx-auto w-fit rounded-2xl bg-white p-2 ring-1 ring-slate-200 shadow-sm">
                             <img x-show="src" x-bind:src="src" alt="QR bukti sudah memilih" class="block w-64 h-64">
                             <div x-show="!src" class="w-64 h-64 flex items-center justify-center text-xs text-slate-400">Membuat QR…</div>
                         </div>
 
-                        <a x-show="src" x-bind:href="src" download="bukti-memilih-{{ $receiptCode }}.png"
-                        class="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-colors focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/></svg>
-                            Unduh Bukti QR
-                        </a>
+                        <div class="no-print mt-4 grid grid-cols-2 gap-3">
+
+                            <a
+                                x-show="src"
+                                x-bind:href="src"
+                                download="bukti-memilih-{{ $receiptCode }}.png"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-600 hover:text-white rounded-xl transition-colors focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
+
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+                                </svg>
+                                Unduh QR
+                            </a>
+
+                            <button
+                                type="button"
+                                onclick="window.print()"
+                                class="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors focus:outline-none focus:ring-4 focus:ring-blue-500/30">
+
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v7H6v-7z"/>
+                                </svg>
+                                Cetak QR
+                            </button>
+                        </div>
                     </div>
                 @endif
 
