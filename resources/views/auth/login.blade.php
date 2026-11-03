@@ -131,10 +131,6 @@
                         </button>
                     </form>
                 </div>
-
-                <p class="mt-6 text-center text-sm text-slate-500">
-                    Pemilih? <a href="{{ route('vote.scan') }}" class="font-semibold text-emerald-600 hover:text-emerald-700">Pindai QR Code di sini</a>
-                </p>
                 <p class="mt-2 text-center text-sm">
                     <a href="{{ route('home') }}" class="text-slate-400 hover:text-slate-600">&larr; Kembali ke beranda</a>
                 </p>

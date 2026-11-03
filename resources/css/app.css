@@ -27,3 +27,48 @@
 .scanner-reader a { color: #6ee7b7; font-size: 0.8rem; }
 .scanner-reader span, .scanner-reader div { color: #e2e8f0; }
 
+@media print {
+    /* Sembunyikan semua elemen */
+    body * {
+        visibility: hidden !important;
+    }
+
+    /* Tampilkan hanya bukti QR */
+    #receipt-card,
+    #receipt-card * {
+        visibility: visible !important;
+    }
+
+    /* Atur posisi bukti QR */
+    #receipt-card {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 58mm !important;
+        margin: 0 !important;
+        padding: 10px !important;
+        background: white !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Sembunyikan tombol unduh dan cetak */
+    .no-print {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* Pastikan gambar QR tercetak */
+    #receipt-card img {
+        display: block !important;
+        width: 220px !important;
+        height: 220px !important;
+        object-fit: contain !important;
+    }
+
+    @page {
+        size: 58mm auto;
+        margin: 3mm;
+    }
+}
+
